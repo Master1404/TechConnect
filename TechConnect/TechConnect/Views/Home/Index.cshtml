@@ -1,0 +1,123 @@
+﻿<style>
+    /* Остальные стили */
+
+    .search-container {
+        display: flex;
+        width: 100%;
+    }
+
+    .search-input {
+        flex: 1;
+        margin-right: 10px;
+    }
+
+    .search-button {
+        width: 100px;
+    }
+
+    .category-container {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .category-title {
+        margin-right: 10px;
+    }
+
+    .category-button {
+        margin-right: 10px;
+        cursor: pointer;
+    }
+
+    .top-advertisements {
+        margin-top: 20px;
+    }
+
+    .advertisement-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+
+        .advertisement-row h2 {
+            flex: 1;
+        }
+
+    .advertisement-container {
+        width: 23%;
+        margin-right: 2%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        /* Дополнительные стили для контейнера объявления */
+    }
+
+        .advertisement-container img {
+            width: 100%;
+            /* Дополнительные стили для фото */
+        }
+
+        .advertisement-container .title {
+            font-weight: bold;
+            /* Дополнительные стили для заголовка */
+        }
+
+        .advertisement-container .price {
+            font-weight: bold;
+            /* Дополнительные стили для цены */
+        }
+</style>
+
+<body>
+    <div class="page-container">
+        <!-- Место для рекламы -->
+        <!-- Строка поиска -->
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Поиск">
+            <button class="button search-button">Поиск</button>
+        </div>
+
+        <!-- Надпись "Категория" -->
+        <h2 class="category-title">Категория:</h2>
+
+        <!-- Кнопки категорий -->
+        <div class="category-container">
+            <div class="button category-button" onclick="handleCategoryClick('Работа')">Работа</div>
+            <div class="button category-button" onclick="handleCategoryClick('Транспорт')">Транспорт</div>
+        </div>
+
+        <!-- Надпись "Топ объявление" -->
+        <h2>Топ объявление</h2>
+
+        <!-- Контейнеры с объявлениями -->
+        <div class="top-advertisements">
+            @for (int i = 0; i < Model.Count; i += 4)
+            {
+                <div class="advertisement-row">
+                    @for (int j = i; j < i + 4 && j < Model.Count; j++)
+                    {
+                        var advertisement = Model[j];
+                        <div class="advertisement-container">
+                            <!-- Контент контейнера объявления -->
+                            <h3 class="title">@advertisement.Title</h3>
+                            <p class="price">@advertisement.Price</p>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Остальной контент страницы -->
+    </div>
+
+    <script>
+        function handleCategoryClick(category) {
+            // Обработчик клика по категории
+            console.log("Клик по категории:", category);
+            // Добавьте здесь свой код для обработки клика по категории
+        }
+    </script>
+</body>

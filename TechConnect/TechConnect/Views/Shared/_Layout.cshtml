@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"] - My Website</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    @RenderSection("Styles", required: false)
+    <style>
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .navbar-nav {
+            flex-direction: row;
+            align-items: center;
+        }
+
+            .navbar-nav li {
+                margin-right: 10px;
+            }
+    </style>
+</head>
+<body>
+    <header>
+        <!-- Заголовок и навигационное меню -->
+        <nav class="navbar navbar-expand navbar-light bg-light">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Дом</a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/Кабинет">Кабинет</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Ads/CreateSpecialVehicle">Добавить объявление</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <footer>
+        <!-- Футер страницы -->
+        <p>Все права защищены &copy; @DateTime.Now.Year</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

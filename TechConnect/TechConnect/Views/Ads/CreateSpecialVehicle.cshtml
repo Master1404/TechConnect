@@ -1,0 +1,52 @@
+﻿@model TechConnect.Models.SpecialEquipment.SpecialVehicleViewModel
+
+@{
+    ViewData["Title"] = "CreateSpecialVehicle";
+}
+
+<h1>CreateSpecialVehicle</h1>
+
+<form method="post" action="/Ads/CreateSpecialVehicle">
+    <div class="form-group">
+        <label for="Title">Заголовок</label>
+        <input type="text" class="form-control" id="Title" name="Title" required maxlength="70">
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Price">Цена</label>
+        <input type="number" class="form-control" id="Price" name="Price" required min="0">
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Category">Категория</label>
+        <select class="form-control" id="Category" name="Category" required>
+            <option value="">Выберите категорию</option>
+            <option value="Job">Работа</option>
+            <option value="Construction">Строительная техника</option>
+            <option value="Agriculture">Сельскохозяйственная техника</option>
+            <option value="Transportation">Транспортная техника</option>
+            <option value="Mining">Горнодобывающая техника</option>
+            <option value="Road">Дорожная техника</option>
+            <!-- Добавьте остальные категории спецтехники -->
+        </select>
+        <span asp-validation-for="Category" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Description">Описание</label>
+        <textarea class="form-control" id="Description" name="Description" maxlength="500"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="PhoneNumber">Номер телефона</label>
+        <input type="text" class="form-control" id="PhoneNumber" name="PhoneNumber" required
+               pattern="^\+\d{2} \d{3} \d{3} \d{2} \d{2}$">
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+   
+
+    <button type="submit" class="btn btn-primary">Создать</button>
+</form>
