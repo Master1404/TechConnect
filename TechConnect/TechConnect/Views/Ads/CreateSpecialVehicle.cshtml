@@ -6,7 +6,19 @@
 
 <h1>CreateSpecialVehicle</h1>
 
-<form method="post" action="/Ads/CreateSpecialVehicle">
+<form method="post" action="/Ads/CreateSpecialVehicle" enctype="multipart/form-data">
+    <div class="validation-summary-errors">
+        <ul>
+            @foreach (var key in ViewData.ModelState.Keys)
+            {
+                var errors = ViewData.ModelState[key].Errors;
+                foreach (var error in errors)
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+            }
+        </ul>
+    </div>
     <div class="form-group">
         <label for="Title">Заголовок</label>
         <input type="text" class="form-control" id="Title" name="Title" required maxlength="70">
@@ -46,7 +58,16 @@
                pattern="^\+\d{2} \d{3} \d{3} \d{2} \d{2}$">
         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
     </div>
-   
+
+    <div class="form-group">
+        <label for="Photos">Фото</label>
+        <input type="file" class="form-control" id="Photos" name="Photos" multiple>
+        <span asp-validation-for="Photos" class="text-danger"></span>
+    </div>
+
+
+    <div id="preview-container"></div>
 
     <button type="submit" class="btn btn-primary">Создать</button>
 </form>
+

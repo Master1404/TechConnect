@@ -20,12 +20,21 @@ namespace TechConnect.Controllers
             _mapper = mapper;
         }
 
-
+        [HttpGet]
         public IActionResult Index()
         {
             var advertisements = _specialVehicle.GetAll(); // Получение списка объявлений из сервиса или репозитория
 
+            foreach (var advertisement in advertisements)
+            {
+                var photoPaths = _specialVehicle.GetPhotoPaths(advertisement.Id); // Получите пути к фотографиям для данного объявления
+
+                advertisement.PhotoPaths = photoPaths;
+            }
+
             var viewModel = _mapper.Map<List<SpecialVehicleViewModel>>(advertisements);
+
+
 
             return View(viewModel);
         }

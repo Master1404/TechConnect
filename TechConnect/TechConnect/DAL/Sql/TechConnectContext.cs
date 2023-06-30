@@ -11,7 +11,7 @@ namespace TechConnect.DAL.Sql
         {
         }
         public DbSet<User> Users { get; set; }
-        public DbSet<SpecialVehicleModel> SpecialVehicls { get; set; }
+        public DbSet<SpecialVehicleModel> SpecialVehicles { get; set; }
     }
     
 }

@@ -1,4 +1,5 @@
 ﻿using TechConnect.Models;
+using TechConnect.Models.SpecialEquipment;
 
 namespace TechConnect.Core
 {
@@ -11,6 +12,7 @@ namespace TechConnect.Core
         TEntity GetById(int entityId);
         List<TEntity> GetAll();
         void Delete(int id);
-       
+        List<PhotoPath> GetPhotoPaths(int id);
+       // string GetFirstPhotoPath(int id);
     }
 }
