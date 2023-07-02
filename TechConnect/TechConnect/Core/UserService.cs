@@ -46,9 +46,16 @@ namespace TechConnect.Core
             throw new NotImplementedException();
         }
 
+        public string GetPhotoUrl(string photoPath)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Update(User entity)
         {
             throw new NotImplementedException();
         }
+
+        
     }
 }

@@ -24,11 +24,10 @@ namespace TechConnect.Models.SpecialEquipment
         public string Description { get; set; }
        
         public List<PhotoPath> PhotoPaths { get; set; }
-
+     
         [NotMapped]
         public List<IFormFile> Photos { get; set; }
 
-        //public bool HasPhotos { get; set; }
 
         [Required(ErrorMessage = "Введите номер телефона")]
         [RegularExpression(@"^\+\d{2} \d{3} \d{3} \d{2} \d{2}$", ErrorMessage = "Неверный формат номера телефона")]

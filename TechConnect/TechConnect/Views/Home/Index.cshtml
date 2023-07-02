@@ -93,32 +93,32 @@
         <h2>Топ объявление</h2>
 
         <!-- Контейнеры с объявлениями -->
-       <div class="top-advertisements">
-    @for (int i = 0; i < Model.Count; i += 4)
-    {
-        <div class="advertisement-row">
-            @for (int j = i; j < i + 4 && j < Model.Count; j++)
+        <div class="top-advertisements">
+            @for (int i = 0; i < Model.Count; i += 4)
             {
-                var advertisement = Model[j];
-                <div class="advertisement-container">
-                    <h3 class="title">@advertisement.Title</h3>
-                    <p class="price">@advertisement.Price</p>
-                    @if (advertisement.PhotoPaths != null && advertisement.PhotoPaths.Count > 0)
+                <div class="advertisement-row">
+                    @for (int j = i; j < i + 4 && j < Model.Count; j++)
                     {
-                        var photoPath = advertisement.PhotoPaths[0].Value;
-                      //  var imagePath = Url.Content("~/images/" + photoPath);
-                                var imagePath = Url.Content(photoPath.Replace("\\", "/"));
-                        <img src="@imagePath" alt="Изображение объявления">
-                    }
-                    else
-                    {
-                        <img src="placeholder.jpg" alt="Плейсхолдер изображения">
+                        var advertisement = Model[j];
+                        <div class="advertisement-container">
+                            <h3 class="title">@advertisement.Title</h3>
+                            <p class="price">@advertisement.Price</p>
+                            @if (advertisement.PhotoPaths != null && advertisement.PhotoPaths.Count > 0)
+                            {
+                                foreach (var photoPath in advertisement.PhotoPaths)
+                                {
+                                  <img src="@Url.Content(photoPath.Value)" alt="Изображение объявления" style="max-width: 200px; max-height: 200px;">
+                                }
+                            }
+                            else
+                            {
+                                <img src="placeholder.jpg" alt="Плейсхолдер изображения">
+                            }
+                        </div>
                     }
                 </div>
             }
         </div>
-    }
-</div>
 
         <!-- Остальной контент страницы -->
     </div>

@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using System.Diagnostics;
 using TechConnect.Core;
+using TechConnect.Migrations;
 using TechConnect.Models;
 using TechConnect.Models.SpecialEquipment;
 
@@ -9,61 +12,61 @@ namespace TechConnect.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IService <User, int> _userService;
+       
         private readonly IMapper _mapper;
         private readonly IService<SpecialVehicleModel, int> _specialVehicle;
 
-        public HomeController(IService<User, int> userService, IService<SpecialVehicleModel, int> specialVehicle, IMapper mapper)
+        public HomeController(IService<SpecialVehicleModel, int> specialVehicle, IMapper mapper)
         {
             _specialVehicle = specialVehicle;
-            _userService = userService;
             _mapper = mapper;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            var advertisements = _specialVehicle.GetAll(); // Получение списка объявлений из сервиса или репозитория
+            /* var advertisements = _specialVehicle.GetAll();
+
+             foreach (var advertisement in advertisements)
+             {
+                 var photoPaths = _specialVehicle.GetPhotoPaths(advertisement.Id); // Получите пути к фотографиям для данного объявления
+
+                 // advertisement.PhotoPaths = photoPaths.Cast<PhotoPath>().ToList();
+                 advertisement.PhotoPaths = photoPaths.Select(path => new PhotoPath { Value = path.ToString() }).ToList();
+             }
+
+             var viewModel = _mapper.Map<List<SpecialVehicleViewModel>>(advertisements);
+             return View(viewModel);*/
+
+            var advertisements = _specialVehicle.GetAll();
 
             foreach (var advertisement in advertisements)
             {
                 var photoPaths = _specialVehicle.GetPhotoPaths(advertisement.Id); // Получите пути к фотографиям для данного объявления
 
-                advertisement.PhotoPaths = photoPaths;
+                var formFiles = new List<IFormFile>();
+                foreach (var photoPath in photoPaths)
+                {
+                    // Создайте объект IFormFile из пути к фотографии
+                    var formFile = new FormFile(new MemoryStream(), 0, 0, "name", photoPath.Value);
+                    formFiles.Add(formFile);
+                }
+
+                advertisement.Photos = formFiles;
             }
 
             var viewModel = _mapper.Map<List<SpecialVehicleViewModel>>(advertisements);
-
-
-
             return View(viewModel);
         }
+
+
+
 
         [HttpGet]
         public IActionResult CreateUser() 
         {
             return View();
         }
-
-        [HttpPost]
-        public IActionResult CreateUser(CreateUserViewModel userViewModel)
-        {
-
-            var user = _mapper.Map<User>(userViewModel);
-            if (ModelState.IsValid)
-            {
-                 _userService.Create(user);
-                return RedirectToAction("GetAllUsers");
-            }
-            return View();
-        }
-
-        public IActionResult GetAllUsers() 
-        {
-            var users = _userService.GetAll();
-            return View(users);
-        }
-
 
         public IActionResult Privacy()
         {
