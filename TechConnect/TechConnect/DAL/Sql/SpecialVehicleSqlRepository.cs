@@ -25,10 +25,6 @@ namespace TechConnect.DAL.Sql
             throw new NotImplementedException();
         }
 
-        /* public SpecialVehicleModel GetById(int id)
-         {
-             return _specialVehicleContext.SpecialVehicles.FirstOrDefault(x => x.Id == id);
-         }*/
         public SpecialVehicleModel GetById(int id)
         {
             var specialVehicle = _specialVehicleContext.SpecialVehicles

@@ -7,6 +7,10 @@ using TechConnect.Models.SpecialEquipment;
 using Microsoft.AspNetCore.Hosting;
 using Google.Cloud.Storage.V1;
 using Google.Apis.Auth.OAuth2;
+using Amazon.S3;
+using Amazon.S3.Transfer;
+using Amazon;
+using Amazon.Runtime;
 
 namespace TechConnect.Controllers
 {
@@ -15,11 +19,15 @@ namespace TechConnect.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IService<SpecialVehicleModel, int> _specialVehicleService;
         private readonly IMapper _mapper;
-        public AdsController(IService<SpecialVehicleModel, int> specialVehicleService, IMapper mapper, IWebHostEnvironment webHostEnvironment)
+        private readonly IAmazonS3 _s3Client;
+        private readonly string _bucketName = "techconnect1404";
+
+        public AdsController(IService<SpecialVehicleModel, int> specialVehicleService, IMapper mapper, IWebHostEnvironment webHostEnvironment, IAmazonS3 s3Client)
         {
             _specialVehicleService = specialVehicleService;
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
+            _s3Client = s3Client;
         }
 
         [HttpGet]
@@ -28,41 +36,7 @@ namespace TechConnect.Controllers
             return View();
         }
 
-         [HttpPost]
-        /* public async Task<IActionResult> CreateSpecialVehicle(SpecialVehicleViewModel vehicleViewModel, List<IFormFile> photos = null)
-         {
-           if (photos != null && photos.Count > 0)
-           {
-               var specialVehicle = _mapper.Map<SpecialVehicleModel>(vehicleViewModel);
-
-               specialVehicle.PhotoPaths = new List<PhotoPath>();
-
-               foreach (var photo in photos)
-               {
-                   if (photo.Length > 0)
-                   {
-                       using (var memoryStream = new MemoryStream())
-                       {
-                           await photo.CopyToAsync(memoryStream);
-                           string uniqueFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
-                           string filePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", uniqueFileName.TrimStart('\\', '/'));
-
-                           using (var fileStream = new FileStream(filePath, FileMode.Create))
-                           {
-                               await photo.CopyToAsync(fileStream);
-                           }
-
-                           specialVehicle.PhotoPaths.Add(new PhotoPath { Value = filePath });
-                       }
-                   }
-               }
-
-               _specialVehicleService.Create(specialVehicle);
-               return RedirectToAction("Index", "Home"); // Перенаправление на другую страницу после сохранения
-           }
-
-           return View(vehicleViewModel);
-       }*/
+        [HttpPost]
         public async Task<IActionResult> CreateSpecialVehicle(SpecialVehicleViewModel vehicleViewModel, List<IFormFile> photos = null)
         {
             if (photos != null && photos.Count > 0)
@@ -71,12 +45,6 @@ namespace TechConnect.Controllers
 
                 specialVehicle.PhotoPaths = new List<PhotoPath>();
 
-                // Создайте клиент Google Cloud Storage с использованием учетных данных из файла JSON
-                //  var storageClient = await StorageClient.CreateAsync();
-
-                var credential = GoogleCredential.FromFile("D:\\TechConnect\\TechConnect\\TechConnect\\TechConnect\\wwwroot\\json_google\\helical-door-391409-e15df7055dad.json");
-                var storageClient = StorageClient.Create(credential);
-
                 foreach (var photo in photos)
                 {
                     if (photo.Length > 0)
@@ -84,14 +52,23 @@ namespace TechConnect.Controllers
                         using (var memoryStream = new MemoryStream())
                         {
                             await photo.CopyToAsync(memoryStream);
-                            string uniqueFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
-                            string bucketName = "techconnect";
-                            string objectName = "images/" + uniqueFileName;
+                            string uniqueFileName = $"{Guid.NewGuid()}_{photo.FileName}";
+                            string objectKey = $"images/{uniqueFileName}";
 
-                            // Загрузите фотографию в Google Cloud Storage
-                            await storageClient.UploadObjectAsync(bucketName, objectName, null, memoryStream);
+                            var awsCredentials = new BasicAWSCredentials("AKIAS6SSBVP5XQQZBCL4", "ddMO7lxlgOlPZfvi8Zt4pSz00aSDGZrNOVF4XAgU");
 
-                            string filePath = $"https://storage.googleapis.com/{bucketName}/{objectName}";
+                            var config = new AmazonS3Config
+                            {
+                                RegionEndpoint = RegionEndpoint.EUNorth1
+                            };
+
+                            using (var s3Client = new AmazonS3Client(awsCredentials, config))
+                            {
+                                var fileTransferUtility = new TransferUtility(s3Client);
+                                await fileTransferUtility.UploadAsync(memoryStream, _bucketName, objectKey);
+                            }
+
+                            string filePath = $"https://{_bucketName}.s3.amazonaws.com/{objectKey}";
 
                             specialVehicle.PhotoPaths.Add(new PhotoPath { Value = filePath });
                         }
@@ -99,12 +76,10 @@ namespace TechConnect.Controllers
                 }
 
                 _specialVehicleService.Create(specialVehicle);
-                return RedirectToAction("Index", "Home"); // Перенаправление на другую страницу после сохранения
+                return RedirectToAction("Index", "Home");
             }
 
             return View(vehicleViewModel);
         }
-
     }
-
 }

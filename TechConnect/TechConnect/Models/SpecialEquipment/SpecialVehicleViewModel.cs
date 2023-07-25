@@ -7,6 +7,7 @@ namespace TechConnect.Models.SpecialEquipment
 {
     public class SpecialVehicleViewModel
     {
+        public int Id { get; set; }
         [Required(ErrorMessage = "Введите заголовок")]
         [MaxLength(70, ErrorMessage = "Длина должна быть не более 70 символов")]
         public string Title { get; set; }

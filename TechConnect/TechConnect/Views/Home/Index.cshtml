@@ -1,54 +1,18 @@
-﻿<style>
+﻿@using TechConnect.Models.SpecialEquipment
+
+<style>
     /* Остальные стили */
 
-    .search-container {
-        display: flex;
-        width: 100%;
-    }
-
-    .search-input {
-        flex: 1;
-        margin-right: 10px;
-    }
-
-    .search-button {
-        width: 100px;
-    }
-
-    .category-container {
-        display: flex;
-        align-items: center;
-        width: 100%;
-        margin-top: 10px;
-    }
-
-    .category-title {
-        margin-right: 10px;
-    }
-
-    .category-button {
-        margin-right: 10px;
-        cursor: pointer;
-    }
-
     .top-advertisements {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
         margin-top: 20px;
     }
 
-    .advertisement-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 20px;
-    }
-
-        .advertisement-row h2 {
-            flex: 1;
-        }
-
     .advertisement-container {
-        width: 23%;
-        margin-right: 2%;
+        flex-basis: 23%;
+        margin: 0 2% 20px 0;
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
@@ -69,6 +33,32 @@
             font-weight: bold;
             /* Дополнительные стили для цены */
         }
+
+    .category-container {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 20px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-right: 10px;
+        /* Дополнительные стили для кнопки */
+    }
+
+        .button:hover {
+            background-color: #0056b3;
+            /* Дополнительные стили при наведении курсора */
+        }
+
 </style>
 
 <body>
@@ -80,43 +70,45 @@
             <button class="button search-button">Поиск</button>
         </div>
 
+
         <!-- Надпись "Категория" -->
         <h2 class="category-title">Категория:</h2>
 
         <!-- Кнопки категорий -->
         <div class="category-container">
-            <div class="button category-button" onclick="handleCategoryClick('Работа')">Работа</div>
-            <div class="button category-button" onclick="handleCategoryClick('Транспорт')">Транспорт</div>
+            @foreach (var category in Enum.GetValues(typeof(AdsCategory)))
+            {
+                <button class="button category-button" onclick="handleCategoryClick('@category.ToString()')">@category.ToString()</button>
+            }
         </div>
 
         <!-- Надпись "Топ объявление" -->
         <h2>Топ объявление</h2>
 
         <!-- Контейнеры с объявлениями -->
-        <div class="top-advertisements">
-            @for (int i = 0; i < Model.Count; i += 4)
+        <div class="top-advertisements" id="top-advertisements">
+            @for (int i = 0; i < Model.Count; i++)
             {
-                <div class="advertisement-row">
-                    @for (int j = i; j < i + 4 && j < Model.Count; j++)
-                    {
-                        var advertisement = Model[j];
-                        <div class="advertisement-container">
-                            <h3 class="title">@advertisement.Title</h3>
-                            <p class="price">@advertisement.Price</p>
-                            @if (advertisement.PhotoPaths != null && advertisement.PhotoPaths.Count > 0)
-                            {
-                                foreach (var photoPath in advertisement.PhotoPaths)
-                                {
-                                  <img src="@Url.Content(photoPath.Value)" alt="Изображение объявления" style="max-width: 200px; max-height: 200px;">
-                                }
-                            }
-                            else
-                            {
-                                <img src="placeholder.jpg" alt="Плейсхолдер изображения">
-                            }
-                        </div>
-                    }
+                var advertisement = Model[i];
+                <div class="advertisement-container">
+                    <a href="@Url.Action("Details", "AdsDetails", new { Id = advertisement.Id })">
+                        <h3 class="title">@advertisement.Title</h3>
+                        <p class="price">@advertisement.Price</p>
+                        @if (advertisement.PhotoPaths != null && advertisement.PhotoPaths.Count > 0)
+                        {
+                            <img src="@advertisement.PhotoPaths[0].Value" alt="Изображение объявления" style="max-width: 200px; max-height: 200px;">
+                        }
+                        else
+                        {
+                            <img src="placeholder.jpg" alt="Плейсхолдер изображения">
+                        }
+                    </a>
                 </div>
+
+                @if ((i + 1) % 4 == 0)
+                {
+                    <div style="flex-basis: 100%;"></div> <!-- Добавляем пустой элемент для создания переноса на новую строку -->
+                }
             }
         </div>
 
@@ -125,9 +117,47 @@
 
     <script>
         function handleCategoryClick(category) {
-            // Обработчик клика по категории
-            console.log("Клик по категории:", category);
-            // Добавьте здесь свой код для обработки клика по категории
+            // Выполняем AJAX-запрос к серверу, чтобы получить объявления для выбранной категории
+            fetch(`/Home/GetAdsByCategory?category=${category}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data); // Выводим данные в консоль браузера
+
+                    // Проверяем, что data не является null или undefined
+                    if (data && data.length > 0) {
+                        displayAds(data);
+                    } else {
+                        console.log("No data received or data is empty.");
+                    }
+                })
+                .catch((error) => console.error(error));
+        }
+
+        // Функция для отображения объявлений на странице
+        function displayAds(ads) {
+            // Очищаем контейнер с объявлениями
+            const adsContainer = document.getElementById('top-advertisements');
+            adsContainer.innerHTML = '';
+
+            // Создаем элементы для каждого объявления и добавляем их в контейнер
+            ads.forEach((ad) => {
+                // Проверяем, что у объявления есть фотографии
+                if (ad.photos && ad.photos.length > 0) {
+                    const adElement = document.createElement('div');
+                    adElement.className = 'advertisement-container';
+                    adElement.innerHTML = `
+                            <a href="${ad.detailsUrl}">
+                                <h3 class="title">${ad.title}</h3>
+                                <p class="price">${ad.price}</p>
+                                <img src="${ad.photos[0].value}" alt="Изображение объявления" style="max-width: 200px; max-height: 200px;">
+                            </a>
+                        `;
+                    adsContainer.appendChild(adElement);
+                } else {
+                    console.log("No photos found for the advertisement.");
+                }
+            });
         }
     </script>
+
 </body>

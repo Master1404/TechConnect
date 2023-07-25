@@ -1,9 +1,12 @@
-﻿using Google.Apis.Auth.OAuth2;
+﻿using Amazon.S3.Model;
+using Amazon.S3;
+using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using TechConnect.Models;
 using TechConnect.Models.SpecialEquipment;
+using Amazon;
 
 namespace TechConnect.Core
 {
@@ -12,6 +15,14 @@ namespace TechConnect.Core
 
         private readonly IRepository<SpecialVehicleModel> _specialVehicleRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
+
+
+        private readonly string _accessKeyId = "AKIAS6SSBVP5XQQZBCL4";
+        private readonly string _secretAccessKey = "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";
+        private readonly string _region = "eu-north-1";
+        private readonly string _bucketName = "techconnect1404";
+
+
         public AdsService(IRepository<SpecialVehicleModel> specialVehicleRepository, IWebHostEnvironment webHostEnvironment)
         {
             _specialVehicleRepository = specialVehicleRepository;
@@ -43,31 +54,30 @@ namespace TechConnect.Core
             return _specialVehicleRepository.GetById(entityId);
         }
 
-        /* public List<PhotoPath> GetPhotoPaths(int id)
-         {
-             var advertisement = _specialVehicleRepository.GetById(id);
+        /*  public List<PhotoPath> GetPhotoPaths(int id)
+          {
+              var advertisement = _specialVehicleRepository.GetById(id);
 
-             if (advertisement != null && advertisement.PhotoPaths != null && advertisement.PhotoPaths.Count > 0)
-             {
-                 var photoPaths = new List<PhotoPath>();
+              if (advertisement != null && advertisement.PhotoPaths != null && advertisement.PhotoPaths.Count > 0)
+              {
+                  var photoPaths = new List<PhotoPath>();
 
-                 foreach (var photoPath in advertisement.PhotoPaths)
-                 {
-                     var imagePath = Path.Combine("images", photoPath.Value);
-                     photoPaths.Add(new PhotoPath { Value = imagePath });
-                 }
+                  foreach (var photoPath in advertisement.PhotoPaths)
+                  {
+                      var imagePath = GetS3ImageUrl(photoPath.Value);
+                      photoPaths.Add(new PhotoPath { Value = imagePath });
+                  }
 
-                 return photoPaths;
-             }
-             else
-             {
-                 // var placeholderPath = Path.Combine(_webHostEnvironment.ContentRootPath, "wwwroot", "images", "placeholder.jpg");
+                  return photoPaths;
+              }
+              else
+              {
                   var placeholderPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "placeholder.jpg");
 
                   var photoPaths = new List<PhotoPath> { new PhotoPath { Value = placeholderPath } };
-                 return photoPaths;
-             }
-         }*/
+                  return photoPaths;
+              }
+          }*/
 
         public List<PhotoPath> GetPhotoPaths(int id)
         {
@@ -79,7 +89,11 @@ namespace TechConnect.Core
 
                 foreach (var photoPath in advertisement.PhotoPaths)
                 {
-                    var imagePath = GetGoogleCloudStorageUrl(photoPath.Value);
+                    // Получение относительного пути к файлу из URL
+                    var uri = new Uri(photoPath.Value);
+                    var relativePath = uri.AbsolutePath.TrimStart('/');
+
+                    var imagePath = GetS3ImageUrl(relativePath);
                     photoPaths.Add(new PhotoPath { Value = imagePath });
                 }
 
@@ -94,23 +108,21 @@ namespace TechConnect.Core
             }
         }
 
-        private string GetGoogleCloudStorageUrl(string fileName)
+
+        private string GetS3ImageUrl(string s3Key)
         {
+            var s3Client = new AmazonS3Client(_accessKeyId, _secretAccessKey, RegionEndpoint.GetBySystemName(_region));
+            var request = new GetPreSignedUrlRequest
+            {
+                BucketName = "techconnect1404",
+                Key = s3Key,
+                Expires = DateTime.Now.AddDays(1)
+            };
 
-            /* var jsonKeyFilePath = "D:/TechConnect/TechConnect/TechConnect/TechConnect/wwwroot/json_google/helical-door-391409-e15df7055dad.json";
-            // var jsonKeyFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "json_google", "helical-door-391409-e15df7055dad.json");
-             var bucketName = "techconnect";
-
-             var credential = GoogleCredential.FromFile(jsonKeyFilePath);
-             var storageClient = StorageClient.Create(credential);
-             var storageObject = storageClient.GetObject(bucketName, fileName);
-             var url = $"https://storage.googleapis.com/{bucketName}/{fileName}";
-             return url;*/
-
-
-            
-            return fileName;
+            var url = s3Client.GetPreSignedURL(request);
+            return url;
         }
+
 
         public string GetPhotoUrl(string photoPath)
         {
@@ -122,9 +134,5 @@ namespace TechConnect.Core
             throw new NotImplementedException();
         }
 
-       /* List<string> IService<SpecialVehicleModel, int>.GetPhotoPaths(int advertisementId)
-        {
-            throw new NotImplementedException();
-        }*/
     }
 }
