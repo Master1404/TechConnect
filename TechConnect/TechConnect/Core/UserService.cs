@@ -1,4 +1,5 @@
 ﻿using TechConnect.Models;
+using TechConnect.Models.SpecialEquipment;
 
 namespace TechConnect.Core
 {
@@ -35,9 +36,26 @@ namespace TechConnect.Core
             throw new NotImplementedException();
         }
 
+      /*  public string GetFirstPhotoPath(int id)
+        {
+            throw new NotImplementedException();
+        }*/
+
+        public List<PhotoPath> GetPhotoPaths(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetPhotoUrl(string photoPath)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Update(User entity)
         {
             throw new NotImplementedException();
         }
+
+        
     }
 }

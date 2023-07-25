@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "helical-door-391409",
+  "private_key_id": "2af708956c6283c8435db5b5dd247bf47fb8f111",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCeEyRPTXQTojzg\nfYCvzMRh2sGKLNwD429GjUBsVIaS+Qah2LF9jc6EjNK+xlnNjyiOJ6U/M0oQq2+X\nqG6wed0r5IwcOtMpZE05BscPEqrC232Qh8FoqM0WA9P1++QBoHeNyLw6dY881xiP\nKY3b2T6uCJrIS6pg/hPL/CA6UpxG2kTECGXMZX2pl37IzHBI+AM8ivZb7efuLoof\nDv6v0N5zo1ycZTsFt6kgBc3YgB8b/F+IUphY6Lpd/MFdDcU1laBQQegchFfa07Sd\n6GXhbSHQeOkwUs6BZDMBRmEI8uubvtSji6MrYbW0dwD6aRnx8bH9IgMC6dRGDxWA\nOykc42qpAgMBAAECggEACnIpDJqJiKtIdZdQPo3RY8a2fSCQxisB6qTL9JIIte6s\nlbEXAufblV55phoVIM83NrRU/bOwecsycSW0HDJkFLyiK6gRgI3nHSp0U2vViqdB\niXWx02465fEJJptniln7JzdJhQgewpOo76ZR1beUpksy8KMwwP8ZT3oQ+88DZ8Ug\nfYrvCfyxxLJJgVy0P1UUrUZNuwDKEMnIqhfhOW0/G1W21jH9HcWtDOXLgQbWgggV\nlZfaj6o2sYPmeC5MXecvmerXPwIqFYreyestAAOOS5mx+ZOnkqi4aX+2tPABM9a0\nvuOqcNwxXqLnpJC3FFR440eP/zybNOKcWNWwnlIUVwKBgQDNMK2d+UO1LJT2f271\naNpB0u+GkFUjf8ajZQSr9ETlPbX+q1Xa3mTm+pQA64WCmKtwLd51X8VX3M/SAEkv\nZ78+m9osLWzASESRqpu0lsiAx67fUnSXJlJFklI/36R3Zy0/42bAGzl3jLO901tb\ncwtRlrEzbsARA1zWjwexy8nJawKBgQDFN78yDUsTqg8e9ix4cJ0KbFZYcCundlhy\nUJfvNf86Z8Ivoi1G93w0qOCPh5zmDgZKZL4dYteQRcX0ZFF7u+nv8wReYUU4ZsAt\n2WGpfNCwGTFt20n/EEHuZ9fQJAh30gQsMn1gWO9Glre1lVp4tmRq/uaaT9gpzw5s\n9p4LyIq9OwKBgQDJDeGQ4SWO6NgtkEBRBySVSvKYj+RcnF8uy1UAiKDZXtZta8T8\naN3F1dIf9KcliCK0EL3hlK3xodOgmdccNDQYTO5CS2A8KJPHh7x5/yUHyqF3AXxs\nfogu02j0XVbyCI82AsQziHmOwrd8URU7TkbQ8y8+jk50XS8irZOEi4J1cQKBgQDC\ng/RZKpFVCNM3J3i/JdtOT4JuYdw8pFYiEel471oXwgTeNGfR6gEgczxhdFFE+qor\nr+dvVnDkhFz1agiQMMxQdPFnIStDsNx1nEVeBJRUS9Tb1IDMSL2upc9PJGsRuxuQ\neA/++lit17PELlX4X3T1rwnFQ2EiA23n/OnvF1H3xwKBgQCOXTXIgvLLArF7qm94\nRC3GL+pKtiQ/Ake42BC6MQtcvZbCSLJNKn5kjWGLIJWurnObE9g1O6ubDNLR23r4\nn22zUnAG239+j10SfOkTA8RzV3lLw9bbKFlc2Wp7GS7b8Q884jgxhgfa2IiGhb7o\nSCemtSqHfwfyiXibyONT56uskg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "master1404@helical-door-391409.iam.gserviceaccount.com",
+  "client_id": "114998447829681947693",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/master1404%40helical-door-391409.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

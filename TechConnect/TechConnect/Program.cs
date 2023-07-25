@@ -1,4 +1,6 @@
 using System.Configuration;
+using Amazon.Extensions.NETCore.Setup;
+using Amazon.S3;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TechConnect.Core;
@@ -17,6 +19,21 @@ builder.Services.AddDbContext<TechConnectContext>(options =>
 // Add services to the container.
 builder.Services.AddScoped<IRepository<User>, UserSqlRepository>();
 builder.Services.AddScoped<IService<User, int>, UserService>();
+
+
+//builder.Services.AddAWSService<IAmazonS3>();
+
+builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions("AWS"));
+builder.Services.AddAWSService<IAmazonS3>(new AWSOptions
+{
+    Region = Amazon.RegionEndpoint.EUWest3,
+    DefaultClientConfig =
+    {
+        ServiceURL = "https://eu-west-3.amazonaws.com"
+    }
+});
+
+
 
 builder.Services.AddScoped<IRepository<SpecialVehicleModel>, SpecialVehicleSqlRepository>();
 builder.Services.AddScoped<IService<SpecialVehicleModel, int>, AdsService>();
@@ -59,4 +76,4 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.Run();
+ app.Run();

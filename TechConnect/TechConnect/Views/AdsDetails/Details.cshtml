@@ -1,0 +1,102 @@
+﻿    @using TechConnect.Models.SpecialEquipment
+    @model SpecialVehicleViewModel
+
+    <link rel="stylesheet" type="text/css" href="~/css/slick.css">
+
+    <style>
+        /* Остальные стили */
+
+        .advertisement-details {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+            .advertisement-details .photos-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+                .advertisement-details .photos-container img {
+                    max-width: 200px;
+                    max-height: 200px;
+                    margin-right: 10px;
+                }
+
+            .advertisement-details .title {
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+
+            .advertisement-details .price {
+                font-weight: bold;
+                text-transform: uppercase;
+                margin-bottom: 10px;
+            }
+
+            .advertisement-details .description {
+                /* Стили для описания */
+                margin-bottom: 10px;
+            }
+
+            .advertisement-details .contacts {
+                /* Стили для контактов */
+                font-weight: bold;
+                text-transform: uppercase;
+                cursor: pointer;
+                color: blue;
+                text-decoration: underline;
+            }
+
+            .advertisement-details .phone-number {
+                display: none;
+                margin-top: 10px;
+                font-weight: bold;
+            }
+    </style>
+
+    <div class="advertisement-details">
+        <div class="photos-container">
+            @if (Model.PhotoPaths != null && Model.PhotoPaths.Count > 0)
+            {
+                <div class="slider">
+                    @foreach (var photoPath in Model.PhotoPaths)
+                    {
+                        <div>
+                            <img src="@photoPath.Value" alt="Изображение объявления">
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+        <h2 class="title">@Model.Title</h2>
+        <p class="price">@Model.Price</p>
+        <p class="price">@Model.Category</p>
+        <p class="description">@Model.Description</p>
+        <p class="contacts">Show Phone Number</p>
+        <p class="phone-number">@Model.PhoneNumber</p>
+    </div>
+
+    <script src="@Url.Content("~/lib/jquery/dist/jquery.min.js")"></script>
+    <script src="@Url.Content("~/js/slick.min.js")"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.slider').slick({
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                arrows: true,
+                prevArrow: '<button type="button" class="slick-prev">Previous</button>',
+                nextArrow: '<button type="button" class="slick-next">Next</button>'
+            });
+        });
+
+        document.querySelector(".contacts").addEventListener("click", function () {
+            var phoneNumberElement = document.querySelector(".phone-number");
+            phoneNumberElement.style.display = "block";
+        });
+    </script>
